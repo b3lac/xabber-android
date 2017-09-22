@@ -20,7 +20,7 @@ install:
 
 script:
   # By default Travis-ci executes './gradlew build connectedCheck' if no 'script:' section found.
-  - ./gradlew build -Pbuild=travis
+  - ./gradlew clean build -Pbuild=travis
 
 
 env:
