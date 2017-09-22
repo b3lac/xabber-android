@@ -80,6 +80,16 @@ android {
             buildConfigField "boolean", "USE_CRASHLYTICS", "false"
             ext.enableCrashlytics = false
         }
+
+        // build type for build-server
+        travis {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            // disable crashlytics
+            buildConfigField "boolean", "USE_CRASHLYTICS", "false"
+            ext.enableCrashlytics = false
+        }
     }
 
     dexOptions {
@@ -112,6 +122,24 @@ def initFabricPropertiesIfNeeded() {
         ant.propertyfile(file: "fabric.properties", comment: commentMessage) {
             entry(key: "apiSecret", value: apiSecret)
             entry(key: "apiKey", value: apiKey)
+        }
+    }
+}
+
+def build_param = "${build}";
+
+if (build_param != "travis") {
+    //exclude travis build
+    android.variantFilter { variant ->
+        if (variant.buildType.name.equals('travis')) {
+            variant.setIgnore(true);
+        }
+    }
+} else {
+    //exclude all except travis build
+    android.variantFilter { variant ->
+        if (!variant.buildType.name.equals('travis')) {
+            variant.setIgnore(true);
         }
     }
 }
