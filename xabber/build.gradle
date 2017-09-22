@@ -80,13 +80,6 @@ android {
             buildConfigField "boolean", "USE_CRASHLYTICS", "false"
             ext.enableCrashlytics = false
         }
-
-        // build type for build-server
-        travis {
-            // disable crashlytics
-            buildConfigField "boolean", "USE_CRASHLYTICS", "false"
-            ext.enableCrashlytics = false
-        }
     }
 
     dexOptions {
@@ -123,23 +116,23 @@ def initFabricPropertiesIfNeeded() {
     }
 }
 
-//def build_param = "${build}";
-//
-//if (build_param != "travis") {
-//    //exclude travis build
-//    android.variantFilter { variant ->
-//        if (variant.buildType.name.equals('travis')) {
-//            variant.setIgnore(true);
-//        }
-//    }
-//} else {
-//    //exclude all except travis build
-//    android.variantFilter { variant ->
-//        if (!variant.buildType.name.equals('travis')) {
-//            variant.setIgnore(true);
-//        }
-//    }
-//}
+def build_param = "${build}";
+
+if (build_param != "dev") {
+    //exclude dev
+    android.variantFilter { variant ->
+        if (variant.getFlavors().get(0).name.equals('dev')) {
+            variant.setIgnore(true);
+        }
+    }
+} else {
+    //exclude all but dev
+    android.variantFilter { variant ->
+        if (!variant.getFlavors().get(0).name.equals('dev')) {
+            variant.setIgnore(true);
+        }
+    }
+}
 
 ext {
     smackVersion = '4.2.1-SNAPSHOT'
